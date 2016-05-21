@@ -1,0 +1,73 @@
+{
+	"id": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+	"name": "i-MSCP",
+	"description": "",
+	"order": [
+		"92e96101-65fe-9d75-6999-a433e5ca7697",
+		"0a7b5f36-1483-b766-b662-2fe821842006"
+	],
+	"folders": [],
+	"timestamp": 1463798327823,
+	"owner": 0,
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "0a7b5f36-1483-b766-b662-2fe821842006",
+			"headers": "",
+			"url": "{{url}}/index.php?action=logout",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body contains logout\"] = responseBody.has(\"You have been successfully logged out.\");\ntests[\"Body contains login\"] = responseBody.has(\"Login\");",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1463802281448,
+			"name": "Logout",
+			"description": "Logout of i-MSCP",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"responses": []
+		},
+		{
+			"id": "92e96101-65fe-9d75-6999-a433e5ca7697",
+			"headers": "",
+			"url": "{{url}}/index.php",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "uname",
+					"value": "{{login}}",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "upass",
+					"value": "{{password}}",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "action",
+					"value": "login",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Body contains logout\"] = responseBody.has(\"Logout\");",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1463802083874,
+			"name": "Login",
+			"description": "Login to i-MSCP",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"responses": []
+		}
+	]
+}
