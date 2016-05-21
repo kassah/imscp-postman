@@ -4,7 +4,9 @@
 	"description": "",
 	"order": [
 		"92e96101-65fe-9d75-6999-a433e5ca7697",
-		"0a7b5f36-1483-b766-b662-2fe821842006"
+		"0a7b5f36-1483-b766-b662-2fe821842006",
+		"999a89e4-3678-6a39-be4c-8e08365e419f",
+		"bbb41297-ad9e-b73a-8b18-5e77858b8018"
 	],
 	"folders": [],
 	"timestamp": 1463798327823,
@@ -66,6 +68,147 @@
 			"time": 1463802083874,
 			"name": "Login",
 			"description": "Login to i-MSCP",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"responses": []
+		},
+		{
+			"id": "999a89e4-3678-6a39-be4c-8e08365e419f",
+			"headers": "",
+			"url": "{{url}}/admin/admin_add.php",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "username",
+					"value": "testadmin{{$randomInt}}",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "imscp1test",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password_confirmation",
+					"value": "imscp1test",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "{{email}}",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fname",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lname",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "gender",
+					"value": "U",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "firm",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "street1",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "street2",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "zip",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "city",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "state",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "phone",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fax",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "uaction",
+					"value": "add_user",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": "tests[\"Body has no errors\"] = !responseBody.has(\"<div class=\\\"error\\\">\");\nvar username = request.data[\"username\"];\nvar re = new RegExp(\"\\\\<a href\\\\=\\\\\\\"user_delete.php\\\\?delete\\\\_id\\\\=([1-9][0-9]*)\\\\\\\" class\\\\=\\\\\\\"icon i\\\\_delete\\\\\\\" onclick=\\\\\\\"return action_delete\\\\(\\\\'\" + username.replace(/([.?*+^$[\\]\\\\(){}|-])/g, \"\\\\$1\") + \"\\\\'\\\\)\\\\\\\" class\\\\=\\\\\\\"link\\\\\\\" title\\\\=\\\\\\\"Delete\\\\\\\"\\\\>Delete\\\\<\\\\/a\\\\>\");\nvar adminid = re.exec(responseBody);\nif (adminid === null || adminid.length < 2) {\n    tests[\"User id is present\"] = false;\n} else {\n    adminid = adminid[1];\n    tests[\"User id is present\"] = adminid;\n    postman.setEnvironmentVariable(\"auto_adminuser\", username);\n    postman.setEnvironmentVariable(\"auto_adminaddid\", adminid);\n}\ntests[\"Body has username\"] = responseBody.has(username);",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1463846576795,
+			"name": "Add Admin User",
+			"description": "Adds Admin User to i-MSCP panel",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"responses": []
+		},
+		{
+			"id": "bbb41297-ad9e-b73a-8b18-5e77858b8018",
+			"headers": "",
+			"url": "{{url}}/admin/user_delete.php?delete_id={{auto_adminaddid}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "// Get UserID (even if they manually enter it)\nvar urlre = /\\?delete_id=([1-9][0-9]*)|(\\{\\{auto_adminaddid\\}\\})$/;\nvar urlparts = urlre.exec(request.url);\nif (urlparts[2] == \"{{auto_adminaddid}}\") {\n    var userid = environment[\"auto_adminaddid\"];\n} else {\n    var userid = urlparts[1];\n}\ntests[\"User id in url\"] = userid;\n// If previous test failed, we'll get errors below, so fail this test.\nif (tests[\"User id in url\"]) {\n    var re = new RegExp(\"\\\\<a href\\\\=\\\\\\\"admin_edit.php\\\\?edit\\\\_id\\\\=\" + userid.replace(/([.?*+^$[\\]\\\\(){}|-])/g, \"\\\\$1\") + \"\\\\\\\" class\\\\=\\\\\\\"icon i\\\\_user\\\\\\\"\");\n    tests[\"Edit Link for Admin Gone \"] = !responseBody.match(re);\n} else {\n    tests[\"Edit Link for Admin Gone \"] = false;\n}\ntests[\"Body does not have Error 400\"] = !responseBody.has(\"Error 400\");\ntests[\"Account deleted message\"] = responseBody.has(\"<div class=\\\"success\\\">Admin account successfully deleted.</div>\");\n// Clean up environment\nif (tests[\"Account deleted message\"]) {\n    postman.clearEnvironmentVariable(\"auto_adminaddid\");\n    postman.clearEnvironmentVariable(\"auto_adminuser\");\n}\n",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1463846005046,
+			"name": "Delete Admin User",
+			"description": "Deletes an i-MSCP Admin User",
 			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
 			"responses": []
 		}
