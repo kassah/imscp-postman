@@ -6,7 +6,9 @@
 		"92e96101-65fe-9d75-6999-a433e5ca7697",
 		"0a7b5f36-1483-b766-b662-2fe821842006",
 		"999a89e4-3678-6a39-be4c-8e08365e419f",
-		"bbb41297-ad9e-b73a-8b18-5e77858b8018"
+		"bbb41297-ad9e-b73a-8b18-5e77858b8018",
+		"6044ada5-fc41-df0f-3de2-85e980504fb9",
+		"15277966-66e3-7d75-b2ed-0a39b45b7dc1"
 	],
 	"folders": [],
 	"timestamp": 1463798327823,
@@ -32,6 +34,298 @@
 			"description": "Logout of i-MSCP",
 			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
 			"responses": []
+		},
+		{
+			"id": "15277966-66e3-7d75-b2ed-0a39b45b7dc1",
+			"headers": "",
+			"url": "{{url}}/admin/user_delete.php?delete_id={{auto_reselleraddid}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "// Get UserID (even if they manually enter it)\nvar urlre = /\\?delete_id=([1-9][0-9]*)|(\\{\\{auto_reselleraddid\\}\\})$/;\nvar urlparts = urlre.exec(request.url);\nif (urlparts[2] == \"{{auto_reselleraddid}}\") {\n    var userid = environment[\"auto_reselleraddid\"];\n} else {\n    var userid = urlparts[1];\n}\ntests[\"User id in url\"] = userid;\n// If previous test failed, we'll get errors below, so fail this test.\nif (tests[\"User id in url\"]) {\n    var re = new RegExp(\"\\\\<a href\\\\=\\\\\\\"reseller_edit.php\\\\?edit\\\\_id\\\\=\" + userid.replace(/([.?*+^$[\\]\\\\(){}|-])/g, \"\\\\$1\") + \"\\\\\\\" class\\\\=\\\\\\\"icon i\\\\_user\\\\\\\"\");\n    tests[\"Edit Link for Reseller Gone \"] = !responseBody.match(re);\n} else {\n    tests[\"Edit Link for Reseller Gone \"] = false;\n}\ntests[\"Body does not have Error 400\"] = !responseBody.has(\"Error 400\");\ntests[\"Account deleted message\"] = responseBody.has(\"<div class=\\\"success\\\">Reseller account successfully deleted.</div>\");\n// Clean up environment\nif (tests[\"Account deleted message\"]) {\n    postman.clearEnvironmentVariable(\"auto_reselleraddid\");\n    postman.clearEnvironmentVariable(\"auto_reselleruser\");\n}\n",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1463854579708,
+			"name": "Delete Reseller User",
+			"description": "Deletes an i-MSCP Reseller User",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"responses": []
+		},
+		{
+			"id": "6044ada5-fc41-df0f-3de2-85e980504fb9",
+			"headers": "",
+			"url": "{{url}}/admin/reseller_add.php",
+			"pathVariables": {},
+			"preRequestScript": "",
+			"method": "POST",
+			"collectionId": "9fa6b60b-1504-0d5c-5813-4f7369aede59",
+			"data": [
+				{
+					"key": "admin_name",
+					"value": "testreseller",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "imscp2test",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password_confirmation",
+					"value": "imscp2test",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "{{email}}",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "reseller_ips[]",
+					"value": "1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_dmn_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_sub_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_als_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_mail_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_ftp_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_sql_db_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_sql_user_cnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_traff_amnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_disk_amnt",
+					"value": "0",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "php_ini_system",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "software_allowed",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "softwaredepot_allowed",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "websoftwaredepot_allowed",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "support_system",
+					"value": "yes",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "customer_id",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fname",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "lname",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "gender",
+					"value": "U",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "firm",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "street1",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "street2",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "zip",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "city",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "state",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "country",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "phone",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "fax",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "submit",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "php_ini_al_allow_url_fopen",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "php_ini_al_display_errors",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "php_ini_al_disable_functions",
+					"value": "no",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "php_ini_al_mail_function",
+					"value": "yes",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_execution_time",
+					"value": "30",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "max_input_time",
+					"value": "60",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "memory_limit",
+					"value": "128",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "post_max_size",
+					"value": "8",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "upload_max_filesize",
+					"value": "2",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"name": "Add Reseller User",
+			"description": "Delete's an i-MSCP reseller",
+			"descriptionFormat": "html",
+			"time": 1463854261746,
+			"version": 2,
+			"responses": [],
+			"tests": "tests[\"Body has no errors\"] = !responseBody.has(\"<div class=\\\"error\\\">\");\nvar username = request.data[\"admin_name\"];\nvar re = new RegExp(\"\\\\<a href\\\\=\\\\\\\"user_delete.php\\\\?delete\\\\_id\\\\=([1-9][0-9]*)\\\\\\\" class\\\\=\\\\\\\"icon i\\\\_delete\\\\\\\" title\\\\=\\\\\\\"Delete\\\\\\\" onclick=\\\\\\\"return action_delete\\\\(\\\\'\" + username.replace(/([.?*+^$[\\]\\\\(){}|-])/g, \"\\\\$1\") + \"\\\\'\\\\)\\\\\\\"\\\\>Delete\\\\<\\\\/a\\\\>\");\nvar resellerid = re.exec(responseBody);\nif (resellerid === null || resellerid.length < 2) {\n    tests[\"User id is present\"] = false;\n} else {\n    resellerid = resellerid[1];\n    tests[\"User id is present\"] = resellerid;\n    postman.setEnvironmentVariable(\"auto_reselleruser\", username);\n    postman.setEnvironmentVariable(\"auto_reselleraddid\", resellerid);\n}\ntests[\"Body has username\"] = responseBody.has(username);\ntests[\"has success message\"] = responseBody.has(\"Reseller account successfully created.\");",
+			"currentHelper": "normal",
+			"helperAttributes": {}
 		},
 		{
 			"id": "92e96101-65fe-9d75-6999-a433e5ca7697",
